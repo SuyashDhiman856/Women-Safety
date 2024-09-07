@@ -1,163 +1,197 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Emergency Call</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Women Safety SOS</title>
     <style>
-        ul li{
-            font-size: larger;
-            font-weight: bold;
+      /* Global Styles */
+      body {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background: linear-gradient(135deg, #ff4b5c, #ff6f91);
+        font-family: "Arial", sans-serif;
+      }
+
+      /* Container for the button and display */
+      .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+      }
+
+      /* Header Title */
+      h1 {
+        color: white;
+        font-size: 3rem;
+        font-weight: bold;
+        margin-bottom: 20px;
+      }
+
+      /* SOS Button Styles */
+      #sosButton {
+        padding: 20px 40px;
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: white;
+        background: #e60023; /* Red color */
+        border: none;
+        border-radius: 50px;
+        box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2);
+        transition: transform 0.2s, box-shadow 0.2s;
+        cursor: pointer;
+      }
+
+      #sosButton:hover {
+        transform: scale(1.1);
+        box-shadow: 0 15px 20px rgba(0, 0, 0, 0.3);
+        background: #ff0055; /* Darker pinkish-red on hover */
+      }
+
+      #sosButton:active {
+        transform: scale(0.98);
+        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+      }
+
+      /* Display area for showing location data */
+      .location-info {
+        margin-top: 20px;
+        padding: 20px;
+        background: rgba(255, 255, 255, 0.8);
+        border-radius: 10px;
+        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+        color: #e60023;
+        font-size: 1.2rem;
+        font-weight: bold;
+        width: 100%;
+        max-width: 400px;
+        text-align: left;
+      }
+
+      .location-info p {
+        margin: 5px 0;
+      }
+
+      /* Footer text */
+      footer {
+        position: absolute;
+        bottom: 10px;
+        font-size: 1rem;
+        color: white;
+      }
+
+      /* Media Queries for Responsiveness */
+      @media (max-width: 600px) {
+        h1 {
+          font-size: 2rem;
         }
+
+        #sosButton {
+          padding: 15px 30px;
+          font-size: 1.2rem;
+        }
+
+        .location-info {
+          font-size: 1rem;
+          max-width: 300px;
+        }
+      }
     </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Women Safety SOS</h1>
+      <button id="sosButton">Send SOS</button>
+      <div id="locationDisplay" class="location-info" style="display: none">
+        <p id="latitude">Latitude:</p>
+        <p id="longitude">Longitude:</p>
+        <p id="timestamp">Timestamp:</p>
+        <p id="otherInfo">Status: Waiting for location...</p>
+      </div>
+    </div>
+
+    <footer>Stay safe. Help is on the way!</footer>
+
     <script>
-        function handleClick()
-        {
-            location.href = "/emergency";
-        }
+      document
+        .getElementById("sosButton")
+        .addEventListener("click", function () {
+          // Get device location
+          if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+              function (position) {
+                const latitude = position.coords.latitude;
+                const longitude = position.coords.longitude;
+                const timestamp = new Date(position.timestamp);
+
+                // Update the display with the location data
+                document.getElementById(
+                  "latitude"
+                ).textContent = `Latitude: ${latitude}`;
+                document.getElementById(
+                  "longitude"
+                ).textContent = `Longitude: ${longitude}`;
+                document.getElementById(
+                  "timestamp"
+                ).textContent = `Timestamp: ${timestamp}`;
+                document.getElementById("otherInfo").textContent =
+                  "SOS alert is being sent...";
+
+                document.getElementById("locationDisplay").style.display =
+                  "block";
+
+                // Send location to backend with multiple recipients
+                fetch("http://localhost:5000/api/send-sos", {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify({
+                    latitude: latitude,
+                    longitude: longitude,
+                    recipientEmail : 'codebits7@gmail.com',
+                    recipientPhone : '+917017858659',
+                  }),
+                })
+                  .then((response) => {
+                    if (!response.ok) {
+                      return response.text().then((text) => {
+                        throw new Error(text);
+                      });
+                    }
+                    return response.json();
+                  })
+                  .then((data) => {
+                    console.log("Success:", data);
+                    alert("SOS alert sent successfully!");
+                    document.getElementById("otherInfo").textContent =
+                      "SOS alert sent successfully!";
+                  })
+                  .catch((error) => {
+                    console.error("Error:", error);
+                    alert("Failed to send SOS alert: " + error.message);
+                    document.getElementById("otherInfo").textContent =
+                      "Failed to send SOS alert.";
+                  });
+              },
+              function (error) {
+                console.error("Error getting location:", error);
+                alert("Unable to get location.");
+                document.getElementById("otherInfo").textContent =
+                  "Unable to get location.";
+              }
+            );
+          } else {
+            alert("Geolocation is not supported by this browser.");
+            document.getElementById("otherInfo").textContent =
+              "Geolocation is not supported.";
+          }
+        });
     </script>
-</head>
-<body>
-    <header class="text-gray-600 body-font">
-        <div class="container mx-auto flex flex-wrap p-5 flex-col md:flex-row items-center">
-          <a href="/" class="flex title-font font-medium items-center text-gray-900 mb-4 md:mb-0">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-10 h-10 text-white p-2 bg-pink-500 rounded-full" viewBox="0 0 24 24">
-              <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
-            </svg>
-            <span class="ml-3 text-xl">Women's App</span>
-          </a>
-          <nav class="md:ml-auto md:mr-auto flex flex-wrap items-center text-base justify-center">
-            <a href="/emergency" class="mr-5 hover:text-gray-900">SOS</a>
-            <a href="/complaint" class="mr-5 hover:text-gray-900">Complaint</a>
-            <a href="/guidelines" class="mr-5 hover:text-gray-900">Guidelines</a>
-            <a href="/precautions" class="mr-5 hover:text-gray-900">Precautions</a>
-          </nav>
-          <button onclick="handleClick()" style="background-color: red; color: white; padding: 15px 20px;" class="inline-flex items-center bg-gray-100 border-0 py-1 px-3 focus:outline-none hover:bg-gray-200 rounded text-base mt-4 md:mt-0">SOS
-            <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-4 h-4 ml-1" viewBox="0 0 24 24">
-              <path d="M5 12h14M12 5l7 7-7 7"></path>
-            </svg>
-          </button>
-        </div>
-      </header>
-      <div style="width: 400px; display: block; margin: auto; text-align: center; line-height: 35px; margin-top: 200px">
-      <h2 style="font-size:xx-large; font-weight: bold;">Emergency Alert System</h2>
-      <p style="font-size: larger;">Click the button below to send an emergency alert to your contacts.</p>
-    
-      <button style="background-color: red;  color: white; padding: 15px 30px; border-radius: 10px;" id="sosButton">Send SOS Alert</button>
-    
-      <p id="locationStatus"></p>
-    
-      <ul id="contactsList">
-        <li>Email: suyashdhiman856@gmail.com</li>
-        <li>Email: suyashdhiman72@gmail.com</li>
-      </ul>
-    </div>
-    
-      <!-- <script src="../script/sosAlert.js" type="application/json"></script> -->
-      <script>
-        // Get the SOS button element
-const sosButton = document.getElementById('sosButton');
-const locationStatus = document.getElementById('locationStatus');
-
-// Emergency contacts (Example list of emails to send alerts)
-const emergencyContacts = ["suyashdhiman856@gmail.com", "suyashdhiman72@gmail.com"];
-
-// Event listener for the SOS button
-sosButton.addEventListener('click', () => {
-  sendEmergencyAlert();
-  shareLocation();
-});
-
-// Function to send an emergency message
-function sendEmergencyAlert() {
-  const message = "SOS! I need help. Please check my location.";
-  emergencyContacts.forEach(contact => {
-    // For simplicity, we are logging to the console. In real applications, you'll integrate with a backend to send emails or texts.
-    console.log(`Sending alert to: ${contact} with message: "${message}"`);
-  });
-  alert('Emergency alert sent to contacts.');
-}
-
-// Function to get and share the user's current location
-function shareLocation() {
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(showLocation, showError);
-  } else {
-    locationStatus.innerText = "Geolocation is not supported by this browser.";
-  }
-}
-
-// Success callback for geolocation
-function showLocation(position) {
-  const latitude = position.coords.latitude;
-  const longitude = position.coords.longitude;
-
-  locationStatus.innerText = `Your current location is Latitude: ${latitude}, Longitude: ${longitude}.`;
-  
-  // Send the location to emergency contacts (in practice, this would be done via backend services)
-  emergencyContacts.forEach(contact => {
-    console.log(`Sending location to: ${contact} - Latitude: ${latitude}, Longitude: ${longitude}`);
-  });
-  alert('Your location has been shared with your emergency contacts.');
-}
-
-// Error handling for geolocation
-function showError(error) {
-  switch (error.code) {
-    case error.PERMISSION_DENIED:
-      locationStatus.innerText = "User denied the request for Geolocation.";
-      break;
-    case error.POSITION_UNAVAILABLE:
-      locationStatus.innerText = "Location information is unavailable.";
-      break;
-    case error.TIMEOUT:
-      locationStatus.innerText = "The request to get user location timed out.";
-      break;
-    case error.UNKNOWN_ERROR:
-      locationStatus.innerText = "An unknown error occurred.";
-      break;
-  }
-}
-
-    </script>
-
-<footer class="text-gray-600 body-font">
-    <div class="container px-5 py-8 mx-auto flex items-center sm:flex-row flex-col">
-      <a class="flex title-font font-medium items-center md:justify-start justify-center text-gray-900">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-10 h-10 text-white p-2 bg-pink-500 rounded-full" viewBox="0 0 24 24">
-          <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
-        </svg>
-        <span class="ml-3 text-xl">Women Safety</span>
-      </a>
-      <p class="text-sm text-gray-500 sm:ml-4 sm:pl-4 sm:border-l-2 sm:border-gray-200 sm:py-2 sm:mt-0 mt-4">© 2020 Women Safety —
-        <a href="https://twitter.com/knyttneve" class="text-gray-600 ml-1" rel="noopener noreferrer" target="_blank">@knyttneve</a>
-      </p>
-      <span class="inline-flex sm:ml-auto sm:mt-0 mt-4 justify-center sm:justify-start">
-        <a class="text-gray-500">
-          <svg fill="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-5 h-5" viewBox="0 0 24 24">
-            <path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"></path>
-          </svg>
-        </a>
-        <a class="ml-3 text-gray-500">
-          <svg fill="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-5 h-5" viewBox="0 0 24 24">
-            <path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"></path>
-          </svg>
-        </a>
-        <a class="ml-3 text-gray-500">
-          <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-5 h-5" viewBox="0 0 24 24">
-            <rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect>
-            <path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37zm1.5-4.87h.01"></path>
-          </svg>
-        </a>
-        <a class="ml-3 text-gray-500">
-          <svg fill="currentColor" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="0" class="w-5 h-5" viewBox="0 0 24 24">
-            <path stroke="none" d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"></path>
-            <circle cx="4" cy="4" r="2" stroke="none"></circle>
-          </svg>
-        </a>
-      </span>
-    </div>
-  </footer>
-</body>
+  </body>
 </html>

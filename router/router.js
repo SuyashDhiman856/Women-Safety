@@ -26,4 +26,5 @@ router.get("/emergency", (req, res) => {
 router.get("/guidelines", (req, res) => {
     res.sendFile(path.join(__dirname, "../pages/guidelines.html"));
 })
+
 module.exports = router;

@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Women Safety SOS</title>
+    <style>
+        /* Global Styles */
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(135deg, #ff4b5c, #ff6f91);
+            font-family: 'Arial', sans-serif;
+        }
+
+        /* Container for the button and display */
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        /* Header Title */
+        h1 {
+            color: white;
+            font-size: 3rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        /* SOS Button Styles */
+        #sosButton {
+            padding: 20px 40px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: white;
+            background: #e60023; /* Red color */
+            border: none;
+            border-radius: 50px;
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2);
+            transition: transform 0.2s, box-shadow 0.2s;
+            cursor: pointer;
+        }
+
+        #sosButton:hover {
+            transform: scale(1.1);
+            box-shadow: 0 15px 20px rgba(0, 0, 0, 0.3);
+            background: #ff0055; /* Darker pinkish-red on hover */
+        }
+
+        #sosButton:active {
+            transform: scale(0.98);
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Display area for showing location data */
+        .location-info {
+            margin-top: 20px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+            color: #e60023;
+            font-size: 1.2rem;
+            font-weight: bold;
+            width: 100%;
+            max-width: 400px;
+            text-align: left;
+        }
+
+        .location-info p {
+            margin: 5px 0;
+        }
+
+        /* Footer text */
+        footer {
+            position: absolute;
+            bottom: 10px;
+            font-size: 1rem;
+            color: white;
+        }
+
+        /* Media Queries for Responsiveness */
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            #sosButton {
+                padding: 15px 30px;
+                font-size: 1.2rem;
+            }
+
+            .location-info {
+                font-size: 1rem;
+                max-width: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Women Safety SOS</h1>
+        <button id="sosButton">Send SOS</button>
+        <div id="locationDisplay" class="location-info" style="display: none;">
+            <p id="latitude">Latitude: </p>
+            <p id="longitude">Longitude: </p>
+            <p id="timestamp">Timestamp: </p>
+            <p id="otherInfo">Status: Waiting for location...</p>
+        </div>
+    </div>
+
+    <footer>Stay safe. Help is on the way!</footer>
+
+    <script>
+        document.getElementById('sosButton').addEventListener('click', function() {
+            // Get device location
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    const latitude = position.coords.latitude;
+                    const longitude = position.coords.longitude;
+                    const timestamp = new Date(position.timestamp);
+
+                    // Update the display with the location data
+                    document.getElementById('latitude').textContent = `Latitude: ${latitude}`;
+                    document.getElementById('longitude').textContent = `Longitude: ${longitude}`;
+                    document.getElementById('timestamp').textContent = `Timestamp: ${timestamp}`;
+                    document.getElementById('otherInfo').textContent = 'SOS alert is being sent...';
+
+                    document.getElementById('locationDisplay').style.display = 'block';
+
+                    // Send location to backend
+                    fetch('http://localhost:5000/api/send-sos', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            latitude: latitude,
+                            longitude: longitude,
+                            recipientEmail : 'suyash',
+                            recipientPhone : 'suyash'
+                        })
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            return response.text().then(text => { throw new Error(text) });
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        console.log('Success:', data);
+                        alert('SOS alert sent successfully!');
+                        document.getElementById('otherInfo').textContent = 'SOS alert sent successfully!';
+                    })
+                    .catch((error) => {
+                        console.error('Error:', error);
+                        alert('Failed to send SOS alert: ' + error.message);
+                        document.getElementById('otherInfo').textContent = 'Failed to send SOS alert.';
+                    });
+                }, function(error) {
+                    console.error('Error getting location:', error);
+                    alert('Unable to get location.');
+                    document.getElementById('otherInfo').textContent = 'Unable to get location.';
+                });
+            } else {
+                alert('Geolocation is not supported by this browser.');
+                document.getElementById('otherInfo').textContent = 'Geolocation is not supported.';
+            }
+        });
+    </script>
+</body>
+</html>

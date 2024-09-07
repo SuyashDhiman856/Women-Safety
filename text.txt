@@ -1,0 +1,46 @@
+C34E9G6PJLS9ZVBGWWCJY875
+
+    <script>
+        document.getElementById('sosButton').addEventListener('click', function() {
+            // Get device location
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    const latitude = position.coords.latitude;
+                    const longitude = position.coords.longitude;
+
+                    // Send location to backend
+                    fetch('http://localhost:5000/api/send-sos', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            latitude: latitude,
+                            longitude: longitude,
+                            recipientEmail: 'codebits7@gmail.com',
+                            recipientPhone: '+918279690455'
+                        })
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            return response.text().then(text => { throw new Error(text) });
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        console.log('Success:', data);
+                        alert('SOS alert sent successfully!');
+                    })
+                    .catch((error) => {
+                        console.error('Error:', error);
+                        alert('Failed to send SOS alert: ' + error.message);
+                    });
+                }, function(error) {
+                    console.error('Error getting location:', error);
+                    alert('Unable to get location.');
+                });
+            } else {
+                alert('Geolocation is not supported by this browser.');
+            }
+        });
+    </script>
