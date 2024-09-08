@@ -3,11 +3,13 @@ const path = require("path");
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const nodemailer = require('nodemailer');
+const multer = require('multer');
 const twilio = require('twilio');
 const app = express();
+const upload = multer();
 
 const accountSid = 'AC2b06d0c9bd650fb1f4bbc2f7e45bd8d7';
-const authToken = 'ba1d859d64090d4580e8d73e1af9fef2';
+const authToken = '5462c019e0a9526b16bfb81190679cb5';
 const twilioClient = twilio(accountSid, authToken);
 
 app.use('/', express.static(path.join(__dirname, "views")));
@@ -25,39 +27,58 @@ const transporter = nodemailer.createTransport({
     }
 });
 
-app.use(cors());
-app.use(bodyParser.json());
+// // POST route to send SOS
+// app.post('/api/send-sos', (req, res) => {
+//     const { latitude, longitude, recipientEmail, recipientPhone } = req.body;
 
-// POST route to send SOS
-app.post('/api/send-sos', (req, res) => {
-    const { latitude, longitude, recipientEmail, recipientPhone } = req.body;
+//     // Google Maps link
+//     const locationLink = `https://maps.google.com/?q=${latitude},${longitude}`;
 
-    // Google Maps link
-    const locationLink = `https://maps.google.com/?q=${latitude},${longitude}`;
+//     // Send Email
+//     const mailOptions = {
+//         from: 'suyashdhiman856@gmail.com',
+//         to: recipientEmail,
+//         subject: 'SOS Alert - Location',
+//         text: `The user has send SOS message, location of the user is: ${locationLink}`
+//     };
 
-    // Send Email
-    const mailOptions = {
+//     transporter.sendMail(mailOptions, (error, info) => {
+//         if (error) {
+//             return res.status(500).json({ message: 'Error sending email', error });
+//         } else {
+//             console.log('Email sent: ' + info.response);
+
+//             twilioClient.messages
+//                 .create({
+//                     body: `SOS Alert! The User is at this location: ${locationLink}`,
+//                     from: '+16466817466',
+//                     to: recipientPhone,
+//                 })
+//                 .then(message => console.log(message.sid))
+//                 .done();
+//         }
+//     });
+// });
+
+app.post('/send-video', upload.single('video'), (req, res) => {
+    const mailOptionsVideo = {
         from: 'suyashdhiman856@gmail.com',
-        to: recipientEmail,
-        subject: 'SOS Alert - Location',
-        text: `The user has send SOS message, location of the user is: ${locationLink}`
+        to: 'codebits7@gmail.com',
+        subject: 'SOS Video Recording',
+        text: 'Video recording from SOS button',
+        attachments: [
+            {
+                filename: 'sos-video.webm',
+                content: req.file.buffer,
+            },
+        ],
     };
 
-    transporter.sendMail(mailOptions, (error, info) => {
+    transporter.sendMail(mailOptionsVideo, (error, info) => {
         if (error) {
-            return res.status(500).json({ message: 'Error sending email', error });
-        } else {
-            console.log('Email sent: ' + info.response);
-
-            twilioClient.messages
-                .create({
-                    body: `SOS Alert! The User is at this location: ${locationLink}`,
-                    from: '+16466817466',
-                    to: recipientPhone,
-                })
-                .then(message => console.log(message.sid))
-                .done();
+            return res.status(500).send('Error sending email: ' + error.toString());
         }
+        res.status(200).send('Email sent: ' + info.response);
     });
 });
 

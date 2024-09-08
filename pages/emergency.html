@@ -146,7 +146,7 @@
                   "block";
 
                 // Send location to backend with multiple recipients
-                fetch("http://https://e1691929-f9b5-4f37-9239-03e21589ab48-00-b5nhnmn65puz.pike.replit.dev//api/send-sos", {
+                fetch("http://localhost:5000/api/send-sos", {
                   method: "POST",
                   headers: {
                     "Content-Type": "application/json",
@@ -154,8 +154,8 @@
                   body: JSON.stringify({
                     latitude: latitude,
                     longitude: longitude,
-                    recipientEmail : 'codebits7@gmail.com',
-                    recipientPhone : '+917017858659',
+                    recipientEmail: "codebits7@gmail.com",
+                    recipientPhone: "+917417074864",
                   }),
                 })
                   .then((response) => {
@@ -185,13 +185,52 @@
                 document.getElementById("otherInfo").textContent =
                   "Unable to get location.";
               }
-            );
+            )
           } else {
             alert("Geolocation is not supported by this browser.");
             document.getElementById("otherInfo").textContent =
               "Geolocation is not supported.";
           }
         });
+
+        document.getElementById("sosButton").addEventListener("click", async function startRecording() {
+              let stream = await navigator.mediaDevices.getUserMedia({
+                video: true,
+              });
+              let mediaRecorder = new MediaRecorder(stream);
+              let chunks = [];
+
+              mediaRecorder.ondataavailable = function (event) {
+                chunks.push(event.data);
+              };
+
+              mediaRecorder.onstop = function () {
+                let blob = new Blob(chunks, { type: "video/webm" });
+                let videoUrl = URL.createObjectURL(blob);
+
+                // Here, you'd send the blob via email
+                sendEmailWithVideo(blob);
+              };
+
+              mediaRecorder.start();
+
+              // Stop recording after a certain time or based on a condition
+              setTimeout(() => mediaRecorder.stop(), 10000); // Records for 10 seconds
+
+              function sendEmailWithVideo(blob) {
+              let formData = new FormData();
+              formData.append("video", blob, "sos-video.webm");
+
+              fetch("/send-video", {
+                method: "POST",
+                body: formData,
+              })
+                .then((response) => response.text())
+                .then((data) => console.log(data))
+                .catch((error) => console.error("Error:", error));
+            }
+            sendEmailWithVideo();
+            })
     </script>
   </body>
 </html>
