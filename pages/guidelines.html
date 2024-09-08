@@ -1,76 +1,526 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Government Guidelines</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="/script/sosAlertLocation"></script>
     <script>
-        function handleClick()
-        {
-            location.href = "/emergency";
-        }
+      function handleClick() {
+        location.href = "/emergency";
+      }
     </script>
-</head>
-<body>
-    <header class="text-gray-600 body-font">
-        <div class="container mx-auto flex flex-wrap p-5 flex-col md:flex-row items-center">
-          <a href="/" class="flex title-font font-medium items-center text-gray-900 mb-4 md:mb-0">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-10 h-10 text-white p-2 bg-pink-500 rounded-full" viewBox="0 0 24 24">
-              <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
-            </svg>
-            <span class="ml-3 text-xl">Women's App</span>
-          </a>
-          <nav class="md:ml-auto md:mr-auto flex flex-wrap items-center text-base justify-center">
-            <a href="/emergency" class="mr-5 hover:text-gray-900">SOS</a>
-            <a href="/complaint" class="mr-5 hover:text-gray-900">Complaint</a>
-            <a href="/guidelines" class="mr-5 hover:text-gray-900">Guidelines</a>
-            <a href="/precautions" class="mr-5 hover:text-gray-900">Precautions</a>
-          </nav>
-          <button onclick="handleClick()" style="background-color: red; color: white; padding: 15px 20px;" class="inline-flex items-center bg-gray-100 border-0 py-1 px-3 focus:outline-none hover:bg-gray-200 rounded text-base mt-4 md:mt-0">SOS
-            <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-4 h-4 ml-1" viewBox="0 0 24 24">
-              <path d="M5 12h14M12 5l7 7-7 7"></path>
-            </svg>
-          </button>
-        </div>
-      </header>>
+    <style>
+      /* General Styles */
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        background-color: #fff0f5; /* Light pink background */
+        color: #333;
+      }
 
-      <footer class="text-gray-600 body-font">
-        <div class="container px-5 py-8 mx-auto flex items-center sm:flex-row flex-col">
-          <a class="flex title-font font-medium items-center md:justify-start justify-center text-gray-900">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-10 h-10 text-white p-2 bg-pink-500 rounded-full" viewBox="0 0 24 24">
-              <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+      /* Header Styles */
+      header {
+        background-color: #c2185b; /* Dark pink/red color */
+        color: #fff;
+        padding: 20px 0;
+        text-align: center;
+      }
+
+      header h1 {
+        margin: 0;
+      }
+
+      nav ul {
+        list-style: none;
+        padding: 0;
+        margin-top: 10px;
+        display: flex;
+        justify-content: center;
+      }
+
+      nav ul li {
+        margin: 0 15px;
+      }
+
+      nav ul li a {
+        color: #ffebee; /* Very light pink */
+        text-decoration: none;
+        font-weight: bold;
+      }
+
+      nav ul li a:hover {
+        text-decoration: underline;
+      }
+
+      /* Main Content Styles */
+      main {
+        padding: 20px;
+      }
+
+      main h2 {
+        color: #c2185b;
+        border-bottom: 2px solid #f8bbd0;
+        padding-bottom: 10px;
+      }
+
+      main h3 {
+        color: #ad1457;
+      }
+
+      section {
+        margin-bottom: 40px;
+      }
+
+      /* SOS Button Styles */
+      .sos-container {
+        text-align: center;
+        margin: 20px 0;
+      }
+
+      #sos-button {
+        background-color: #d32f2f; /* Bright red color */
+        color: #fff;
+        border: none;
+        padding: 15px 30px;
+        font-size: 1.2em;
+        cursor: pointer;
+        border-radius: 5px;
+      }
+
+      #sos-button:hover {
+        background-color: #b71c1c;
+      }
+
+      .sos-container p {
+        margin-top: 10px;
+        color: #555;
+      }
+
+      /* Footer Styles */
+      footer {
+        background-color: #c2185b;
+        color: #fff;
+        text-align: center;
+        padding: 10px 0;
+      }
+
+      /* Responsive Styles */
+      @media (max-width: 600px) {
+        nav ul {
+          flex-direction: column;
+          margin-top: 0;
+        }
+
+        nav ul li {
+          margin: 10px 0;
+        }
+
+        main {
+          padding: 10px;
+        }
+
+        #sos-button {
+          width: 100%;
+          font-size: 1em;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header
+      style="background-color: red; padding: 0px; color: white"
+      class="text-gray-600 body-font"
+    >
+      <div
+        class="container mx-auto flex flex-wrap p-5 flex-col md:flex-row items-center"
+      >
+        <a
+          href="/"
+          class="flex title-font font-medium items-center text-gray-900 mb-4 md:mb-0"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            class="w-10 h-10 text-white p-2 bg-pink-500 rounded-full"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"
+            ></path>
+          </svg>
+          <span style="color: white" class="ml-3 text-xl">Women's App</span>
+        </a>
+        <nav
+          class="md:ml-auto md:mr-auto flex flex-wrap items-center text-base justify-center"
+        >
+          <a href="/emergency" class="mr-5 hover:text-gray-900">SOS</a>
+          <a href="/complaint" class="mr-5 hover:text-gray-900">Complaint</a>
+          <a href="/guidelines" class="mr-5 hover:text-gray-900">Guidelines</a>
+          <a href="/precautions" class="mr-5 hover:text-gray-900"
+            >Precautions</a
+          >
+          <a href="/map" class="mr-5 hover:text-gray-900">Map</a>
+          <a href="/login" class="mr-5 hover:text-gray-900">LogIn/SignUp</a>
+        </nav>
+        <button
+          onclick="triggerSOS()"
+          style="background-color: white; color: red; padding: 15px 20px"
+          class="inline-flex items-center bg-gray-100 border-0 py-1 px-3 focus:outline-none hover:bg-gray-200 rounded text-base mt-4 md:mt-0"
+        >
+          SOS
+          <svg
+            fill="none"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            class="w-4 h-4 ml-1"
+            viewBox="0 0 24 24"
+          >
+            <path d="M5 12h14M12 5l7 7-7 7"></path>
+          </svg>
+        </button>
+      </div>
+    </header>
+    >
+
+    <main>
+      <!-- SOS Button -->
+      <div class="sos-container">
+        <button onclick="triggerSOS()" id="sos-button">SOS Emergency</button>
+        <p>
+          Press the SOS button or press the spacebar three times to trigger an
+          emergency alert.
+        </p>
+      </div>
+
+      <!-- Government Guidelines Content -->
+      <section id="legal-rights">
+        <h2>Legal Rights for Women in India</h2>
+        <p>
+          Women in India are protected under several legal provisions aimed at
+          ensuring their safety and well-being. These laws empower women to seek
+          justice and provide legal recourse in case of violence, harassment, or
+          discrimination.
+        </p>
+        <h3>Key Laws Protecting Women:</h3>
+        <ul>
+          <li>
+            <strong
+              >Protection of Women from Domestic Violence Act, 2005:</strong
+            >
+            This law protects women from abuse by family members, including
+            physical, emotional, and economic violence.
+          </li>
+          <li>
+            <strong>Criminal Law Amendment Act, 2013:</strong> Introduced
+            stricter punishment for sexual harassment, stalking, acid attacks,
+            and trafficking.
+          </li>
+          <li>
+            <strong>Sexual Harassment of Women at Workplace Act, 2013:</strong>
+            Protects women from harassment at the workplace and ensures a safe
+            working environment.
+          </li>
+          <li>
+            <strong>Dowry Prohibition Act, 1961:</strong> Prohibits the giving
+            or taking of dowry during marriage and makes it punishable by law.
+          </li>
+          <li>
+            <strong>Indian Penal Code (IPC) Provisions:</strong>
+            <ul>
+              <li>
+                <strong>Section 354:</strong> Protects women from acts of
+                molestation.
+              </li>
+              <li>
+                <strong>Section 376:</strong> Provides severe punishment for
+                rape, ensuring justice for survivors.
+              </li>
+              <li>
+                <strong>Section 509:</strong> Covers verbal abuse and
+                inappropriate gestures.
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </section>
+
+      <section id="helplines">
+        <h2>Helplines and Emergency Services</h2>
+        <p>
+          The government has provided several helplines and emergency services
+          specifically for women in distress. These services are available 24/7
+          to ensure timely assistance.
+        </p>
+        <ul>
+          <li>
+            <strong>Women Helpline Number (1091):</strong> A dedicated helpline
+            number for women facing harassment or violence.
+          </li>
+          <li>
+            <strong>National Emergency Number (112):</strong> An integrated
+            emergency number for police, ambulance, and fire services.
+          </li>
+          <li>
+            <strong>Police Helpline (100):</strong> For immediate police
+            assistance.
+          </li>
+          <li>
+            <strong>Women’s Safety Mobile App (1091 App):</strong> A mobile
+            application by the government where women can register complaints,
+            seek help, and access safety features like tracking and SOS
+            messaging.
+          </li>
+        </ul>
+      </section>
+
+      <section id="safety-guidelines">
+        <h2>Safety Guidelines for Women</h2>
+        <h3>At Home:</h3>
+        <ul>
+          <li>
+            Ensure that doors and windows are securely locked, especially during
+            the night.
+          </li>
+          <li>
+            Always verify the identity of visitors or service personnel through
+            proper identification cards or references.
+          </li>
+          <li>Install security cameras or alarms for added safety.</li>
+        </ul>
+        <h3>In Public Spaces:</h3>
+        <ul>
+          <li>Stay in well-lit areas, especially at night.</li>
+          <li>
+            Avoid accepting lifts from strangers, especially in secluded areas.
+          </li>
+          <li>Keep emergency contacts on speed dial.</li>
+          <li>
+            Use mobile apps with GPS tracking to alert family members in case of
+            an emergency.
+          </li>
+        </ul>
+        <h3>In the Workplace:</h3>
+        <ul>
+          <li>
+            Be aware of workplace policies regarding harassment and
+            discrimination.
+          </li>
+          <li>
+            Report any instance of inappropriate behavior to the Internal
+            Complaints Committee (ICC) in your organization.
+          </li>
+          <li>
+            Never hesitate to speak up or seek legal help if facing harassment
+            at work.
+          </li>
+        </ul>
+      </section>
+
+      <section id="cyber-safety">
+        <h2>Cyber Safety for Women</h2>
+        <p>
+          With the increasing use of the internet and social media, women must
+          take precautions to protect their online privacy.
+        </p>
+        <h3>Key Guidelines:</h3>
+        <ul>
+          <li>
+            Avoid sharing personal information such as addresses or contact
+            details on social media.
+          </li>
+          <li>
+            Regularly update passwords and enable two-factor authentication for
+            online accounts.
+          </li>
+          <li>
+            Be cautious of unknown messages or emails asking for personal or
+            financial information.
+          </li>
+          <li>
+            Use privacy settings to control who can view your online profiles.
+          </li>
+        </ul>
+        <h3>Legal Provisions for Cyber Safety:</h3>
+        <ul>
+          <li>
+            <strong>The Information Technology Act, 2000:</strong> Protects
+            women from cybercrimes like hacking, online harassment, and identity
+            theft.
+          </li>
+          <li>
+            <strong>Section 67A of the IT Act:</strong> Deals with the
+            transmission of obscene material online.
+          </li>
+          <li>
+            <strong>Cyber Crime Helpline (155260):</strong> A helpline for
+            reporting online harassment and cybercrimes.
+          </li>
+        </ul>
+      </section>
+
+      <section id="government-initiatives">
+        <h2>Government Initiatives for Women’s Safety</h2>
+        <p>
+          Several government programs have been launched to promote women’s
+          safety in various spheres of life.
+        </p>
+        <h3>Key Initiatives:</h3>
+        <ul>
+          <li>
+            <strong>One Stop Centre Scheme (OSC):</strong> Provides integrated
+            support and assistance to women affected by violence, including
+            medical, legal, and psychological help.
+          </li>
+          <li>
+            <strong>Beti Bachao, Beti Padhao:</strong> A national initiative
+            aimed at protecting and empowering the girl child.
+          </li>
+          <li>
+            <strong>Mahila Police Volunteers:</strong> Women police volunteers
+            work in communities to ensure safety, provide guidance, and raise
+            awareness about women's rights.
+          </li>
+          <li>
+            <strong>Nirbhaya Fund:</strong> A fund created for initiatives to
+            enhance the safety and security of women in the country.
+          </li>
+        </ul>
+      </section>
+
+      <section id="reporting-crimes">
+        <h2>How to Report Crimes Against Women</h2>
+        <p>
+          It is essential to understand the steps involved in reporting crimes
+          against women:
+        </p>
+        <h3>Steps to File a Complaint:</h3>
+        <ul>
+          <li>
+            Approach the nearest police station or file an online FIR through
+            the
+            <a href="https://digitalpolice.gov.in/" target="_blank"
+              >National Crime Reporting Portal</a
+            >.
+          </li>
+          <li>
+            If the police refuse to file an FIR, you can approach the
+            <strong>District Superintendent of Police</strong> or file a
+            complaint before a <strong>Magistrate</strong>.
+          </li>
+          <li>Helplines like 1091 can be used to report crimes anonymously.</li>
+        </ul>
+      </section>
+    </main>
+
+    <footer class="text-gray-600 body-font">
+      <div
+        class="container px-5 py-8 mx-auto flex items-center sm:flex-row flex-col"
+      >
+        <a
+          class="flex title-font font-medium items-center md:justify-start justify-center text-gray-900"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            class="w-10 h-10 text-white p-2 bg-pink-500 rounded-full"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"
+            ></path>
+          </svg>
+          <span class="ml-3 text-xl">Women Safety</span>
+        </a>
+        <p
+          class="text-sm text-gray-500 sm:ml-4 sm:pl-4 sm:border-l-2 sm:border-gray-200 sm:py-2 sm:mt-0 mt-4"
+        >
+          © 2020 Women Safety —
+          <a
+            href="https://twitter.com/knyttneve"
+            class="text-gray-600 ml-1"
+            rel="noopener noreferrer"
+            target="_blank"
+            >@knyttneve</a
+          >
+        </p>
+        <span
+          class="inline-flex sm:ml-auto sm:mt-0 mt-4 justify-center sm:justify-start"
+        >
+          <a class="text-gray-500">
+            <svg
+              fill="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              class="w-5 h-5"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"
+              ></path>
             </svg>
-            <span class="ml-3 text-xl">Women Safety</span>
           </a>
-          <p class="text-sm text-gray-500 sm:ml-4 sm:pl-4 sm:border-l-2 sm:border-gray-200 sm:py-2 sm:mt-0 mt-4">© 2020 Women Safety —
-            <a href="https://twitter.com/knyttneve" class="text-gray-600 ml-1" rel="noopener noreferrer" target="_blank">@knyttneve</a>
-          </p>
-          <span class="inline-flex sm:ml-auto sm:mt-0 mt-4 justify-center sm:justify-start">
-            <a class="text-gray-500">
-              <svg fill="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-5 h-5" viewBox="0 0 24 24">
-                <path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"></path>
-              </svg>
-            </a>
-            <a class="ml-3 text-gray-500">
-              <svg fill="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-5 h-5" viewBox="0 0 24 24">
-                <path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"></path>
-              </svg>
-            </a>
-            <a class="ml-3 text-gray-500">
-              <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-5 h-5" viewBox="0 0 24 24">
-                <rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect>
-                <path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37zm1.5-4.87h.01"></path>
-              </svg>
-            </a>
-            <a class="ml-3 text-gray-500">
-              <svg fill="currentColor" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="0" class="w-5 h-5" viewBox="0 0 24 24">
-                <path stroke="none" d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"></path>
-                <circle cx="4" cy="4" r="2" stroke="none"></circle>
-              </svg>
-            </a>
-          </span>
-        </div>
-      </footer>
-</body>
+          <a class="ml-3 text-gray-500">
+            <svg
+              fill="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              class="w-5 h-5"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"
+              ></path>
+            </svg>
+          </a>
+          <a class="ml-3 text-gray-500">
+            <svg
+              fill="none"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              class="w-5 h-5"
+              viewBox="0 0 24 24"
+            >
+              <rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect>
+              <path
+                d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37zm1.5-4.87h.01"
+              ></path>
+            </svg>
+          </a>
+          <a class="ml-3 text-gray-500">
+            <svg
+              fill="currentColor"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="0"
+              class="w-5 h-5"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke="none"
+                d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"
+              ></path>
+              <circle cx="4" cy="4" r="2" stroke="none"></circle>
+            </svg>
+          </a>
+        </span>
+      </div>
+    </footer>
+  </body>
 </html>

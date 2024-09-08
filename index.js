@@ -27,40 +27,40 @@ const transporter = nodemailer.createTransport({
     }
 });
 
-// // POST route to send SOS
-// app.post('/api/send-sos', (req, res) => {
-//     const { latitude, longitude, recipientEmail, recipientPhone } = req.body;
+// POST route to send SOS
+app.post('/api/send-sos', (req, res) => {
+    const { latitude, longitude, recipientEmail, recipientPhone } = req.body;
 
-//     // Google Maps link
-//     const locationLink = `https://maps.google.com/?q=${latitude},${longitude}`;
+    // Google Maps link
+    const locationLink = `https://maps.google.com/?q=${latitude},${longitude}`;
 
-//     // Send Email
-//     const mailOptions = {
-//         from: 'suyashdhiman856@gmail.com',
-//         to: recipientEmail,
-//         subject: 'SOS Alert - Location',
-//         text: `The user has send SOS message, location of the user is: ${locationLink}`
-//     };
+    // Send Email
+    const mailOptions = {
+        from: 'suyashdhiman856@gmail.com',
+        to: recipientEmail,
+        subject: 'SOS Alert - Location',
+        text: `The user has send SOS message, location of the user is: ${locationLink}`
+    };
 
-//     transporter.sendMail(mailOptions, (error, info) => {
-//         if (error) {
-//             return res.status(500).json({ message: 'Error sending email', error });
-//         } else {
-//             console.log('Email sent: ' + info.response);
+    transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+            return res.status(500).json({ message: 'Error sending email', error });
+        } else {
+            console.log('Email sent: ' + info.response);
 
-//             twilioClient.messages
-//                 .create({
-//                     body: `SOS Alert! The User is at this location: ${locationLink}`,
-//                     from: '+16466817466',
-//                     to: recipientPhone,
-//                 })
-//                 .then(message => console.log(message.sid))
-//                 .done();
-//         }
-//     });
-// });
+            twilioClient.messages
+                .create({
+                    body: `SOS Alert! The User is at this location: ${locationLink}`,
+                    from: '+16466817466',
+                    to: recipientPhone,
+                })
+                .then(message => console.log(message.sid))
+                .done();
+        }
+    });
+});
 
-app.post('/send-video', upload.single('video'), (req, res) => {
+app.post('/api/send-video', upload.single('video'), (req, res) => {
     const mailOptionsVideo = {
         from: 'suyashdhiman856@gmail.com',
         to: 'codebits7@gmail.com',
@@ -81,6 +81,42 @@ app.post('/send-video', upload.single('video'), (req, res) => {
         res.status(200).send('Email sent: ' + info.response);
     });
 });
+
+app.post('/api/send-audio', upload.single('audio'), (req, res) => {
+    const audio = req.file;
+
+    // Set up email transport using Nodemailer
+    let transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+            user: 'suyashdhiman856@gmail.com',
+            pass: 'vpgs afij judu ayst',
+        },
+    });
+
+    // Set up email data
+    let mailOptionAudio = {
+        from: 'suyashdhiman856@gmail.com',
+        to: 'codebits7@gmail.com',
+        subject: 'SOS Audio Recording',
+        text: 'Attached is the 10-second audio recording.',
+        attachments: [{
+            filename: 'recording.wav',
+            content: audio.buffer,
+        }],
+    };
+
+    // Send the email
+    transporter.sendMail(mailOptionAudio, (error, info) => {
+        if (error) {
+            console.log(error);
+            return res.status(500).send('Error sending email');
+        }
+        console.log('Email sent: ' + info.response);
+        res.send('Audio email sent successfully');
+    });
+});
+
 
 // Start the server
 const PORT = process.env.PORT || 5000;

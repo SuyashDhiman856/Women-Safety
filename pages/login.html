@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="/css/login">
+
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>  
+
+    <!-- <script src="https://cdn.tailwindcss.com"></script> -->
+
+    <title>Login & Register Page</title>
+</head>
+
+<body>
+    <!-- <header style="background-color: red; padding: 0px; color: white;" class="text-gray-600 body-font">
+        <div class="container mx-auto flex flex-wrap p-5 flex-col md:flex-row items-center">
+          <a href="/" class="flex title-font font-medium items-center text-gray-900 mb-4 md:mb-0">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-10 h-10 text-white p-2 bg-pink-500 rounded-full" viewBox="0 0 24 24">
+              <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+            </svg>
+            <span style="color: white;"  class="ml-3 text-xl">Women's App</span>
+          </a>
+          <nav class="md:ml-auto md:mr-auto flex flex-wrap items-center text-base justify-center">
+            <a href="/emergency" class="mr-5 hover:text-gray-900">SOS</a>
+            <a href="/complaint" class="mr-5 hover:text-gray-900">Complaint</a>
+            <a href="/guidelines" class="mr-5 hover:text-gray-900">Guidelines</a>
+            <a href="/precautions" class="mr-5 hover:text-gray-900">Precautions</a>
+            <a href="/map" class="mr-5 hover:text-gray-900">Map</a>
+            <a href="/login" class="mr-5 hover:text-gray-900">LogIn/SignUp</a>
+          </nav>
+          <button onclick="handleClick()" style="background-color: white; color: red; padding: 15px 20px;" class="inline-flex items-center bg-gray-100 border-0 py-1 px-3 focus:outline-none hover:bg-gray-200 rounded text-base mt-4 md:mt-0">SOS
+            <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-4 h-4 ml-1" viewBox="0 0 24 24">
+              <path d="M5 12h14M12 5l7 7-7 7"></path>
+            </svg>
+          </button>
+        </div>
+      </header> -->
+
+    <div class="container" id="container">
+        <div class="form-container sign-up">
+            <form>
+                <h1>Create Account</h1>
+                <div class="social-icons">
+                    <a href="#" class="icons"><i class='bx bxl-google'></i></a>
+                    <a href="#" class="icons"><i class='bx bxl-facebook'></i></a>
+                    <a href="#" class="icons"><i class='bx bxl-github'></i></a>
+                    <a href="#" class="icons"><i class='bx bxl-linkedin'></i></a>
+                </div>
+                <span>Register with E-mail</span>
+                <input type="text" placeholder="Name">
+                <input type="email" placeholder="Enter E-mail">
+                <input type="number" placeholder="Enter Phone Number">
+                <input type="password" placeholder="Enter Password">
+                <button id="signup">Sign Up</button>
+            </form>
+        </div>
+
+
+        <div class="form-container sign-in">
+            <form>
+                <h1>Sign In</h1>
+                <div class="social-icons">
+                    <a href="#" class="icons"><i class='bx bxl-google'></i></a>
+                    <a href="#" class="icons"><i class='bx bxl-facebook'></i></a>
+                    <a href="#" class="icons"><i class='bx bxl-github'></i></a>
+                    <a href="#" class="icons"><i class='bx bxl-linkedin'></i></a>
+                </div>
+                <span>Login With Email & Password</span>
+                <input type="email" placeholder="Enter E-mail">
+                <input type="password" placeholder="Enter Phone Number">
+                <a href="#">Forget Password?</a>
+                <button id="loginBtn">Sign In</button>
+            </form>
+        </div>
+
+
+        <div class="toggle-container">
+            <div class="toggle">
+                <div class="toggle-panel toggle-left">
+                    <h1>Welcome To <br>Women Safety</h1>
+                    <p>Sign in With ID & Passowrd</p>
+                    <button class="hidden" id="login">Sign In</button>
+                </div>
+                <div class="toggle-panel toggle-right">
+                    <h1>Women Safety</h1>
+                    <p>Make yourself feel safe</p>
+                    <button class="hidden" id="register">Sign Up</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/script/login"></script>
+</body>
+
+</html>

@@ -4,16 +4,17 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Women Safety SOS</title>
+    <script src="/script/sosAlert"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
       /* Global Styles */
       body {
         margin: 0;
         padding: 0;
-        display: flex;
+        display: block;
         justify-content: center;
         align-items: center;
         height: 100vh;
-        background: linear-gradient(135deg, #ff4b5c, #ff6f91);
         font-family: "Arial", sans-serif;
       }
 
@@ -27,7 +28,7 @@
 
       /* Header Title */
       h1 {
-        color: white;
+        color: red;
         font-size: 3rem;
         font-weight: bold;
         margin-bottom: 20px;
@@ -104,16 +105,85 @@
     </style>
   </head>
   <body>
-    <div class="container">
-      <h1>Women Safety SOS</h1>
+    <header
+      style="background-color: red; padding: 0px; color: white"
+      class="text-gray-600 body-font"
+    >
+      <div
+        class="container mx-auto flex flex-wrap p-5 flex-col md:flex-row items-center"
+      >
+        <a
+          href="/"
+          class="flex title-font font-medium items-center text-gray-900 mb-4 md:mb-0"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            class="w-10 h-10 text-white p-2 bg-pink-500 rounded-full"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"
+            ></path>
+          </svg>
+          <span style="color: white" class="ml-3 text-xl">Women's App</span>
+        </a>
+        <nav
+          class="md:ml-auto md:mr-auto flex flex-wrap items-center text-base justify-center"
+        >
+          <a href="/emergency" class="mr-5 hover:text-gray-900">SOS</a>
+          <a href="/complaint" class="mr-5 hover:text-gray-900">Complaint</a>
+          <a href="/guidelines" class="mr-5 hover:text-gray-900">Guidelines</a>
+          <a href="/precautions" class="mr-5 hover:text-gray-900"
+            >Precautions</a
+          >
+          <a href="/map" class="mr-5 hover:text-gray-900">Map</a>
+          <a href="/login" class="mr-5 hover:text-gray-900">LogIn/SignUp</a>
+        </nav>
+        <button
+          onclick="handleClick()"
+          style="background-color: white; color: red; padding: 15px 20px"
+          class="inline-flex items-center bg-gray-100 border-0 py-1 px-3 focus:outline-none hover:bg-gray-200 rounded text-base mt-4 md:mt-0"
+        >
+          SOS
+          <svg
+            fill="none"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            class="w-4 h-4 ml-1"
+            viewBox="0 0 24 24"
+          >
+            <path d="M5 12h14M12 5l7 7-7 7"></path>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <div
+      style="display: block; position: absolute; top: 30%; line-height: 40px"
+      class="container"
+    >
+      <h1 style="font-size: xx-large">Women Safety SOS</h1>
       <button id="sosButton">Send SOS</button>
-      <div id="locationDisplay" class="location-info" style="display: none">
+      <div
+        style="display: none; margin: 0 auto"
+        id="locationDisplay"
+        class="location-info"
+        style="display: none"
+      >
         <p id="latitude">Latitude:</p>
         <p id="longitude">Longitude:</p>
         <p id="timestamp">Timestamp:</p>
         <p id="otherInfo">Status: Waiting for location...</p>
       </div>
     </div>
+    <audio src="/audio/alarm" id="alarm"></audio>
 
     <footer>Stay safe. Help is on the way!</footer>
 
@@ -174,9 +244,9 @@
                   })
                   .catch((error) => {
                     console.error("Error:", error);
-                    alert("Failed to send SOS alert: " + error.message);
-                    document.getElementById("otherInfo").textContent =
-                      "Failed to send SOS alert.";
+                    // alert("Failed to send SOS alert: " + error.message);
+                  //   document.getElementById("otherInfo").textContent =
+                  //     "Failed to send SOS alert.";
                   });
               },
               function (error) {
@@ -185,7 +255,7 @@
                 document.getElementById("otherInfo").textContent =
                   "Unable to get location.";
               }
-            )
+            );
           } else {
             alert("Geolocation is not supported by this browser.");
             document.getElementById("otherInfo").textContent =
@@ -193,44 +263,110 @@
           }
         });
 
-        document.getElementById("sosButton").addEventListener("click", async function startRecording() {
-              let stream = await navigator.mediaDevices.getUserMedia({
-                video: true,
-              });
-              let mediaRecorder = new MediaRecorder(stream);
-              let chunks = [];
+      document
+        .getElementById("sosButton")
+        .addEventListener("click", async function startRecording() {
+          let stream = await navigator.mediaDevices.getUserMedia({
+            video: true,
+          });
+          let mediaRecorder = new MediaRecorder(stream);
+          let chunks = [];
+
+          mediaRecorder.ondataavailable = function (event) {
+            chunks.push(event.data);
+          };
+
+          mediaRecorder.onstop = function () {
+            let blob = new Blob(chunks, { type: "video/webm" });
+            let videoUrl = URL.createObjectURL(blob);
+
+            // Here, you'd send the blob via email
+            sendEmailWithVideo(blob);
+          };
+
+          mediaRecorder.start();
+
+          // Stop recording after a certain time or based on a condition
+          setTimeout(() => {
+            mediaRecorder.stop(); // Stop recording after 10 seconds
+            stream.getTracks().forEach((track) => track.stop()); // Stop all camera tracks
+          }, 10000); // Records for 10 seconds
+
+          function sendEmailWithVideo(blob) {
+            let formData = new FormData();
+            formData.append("video", blob, "sos-video.webm");
+
+            fetch("/api/send-video", {
+              method: "POST",
+              body: formData,
+            })
+              .then((response) => response.text())
+              .then((data) => console.log(data))
+              .catch((error) => console.error("Error:", error));
+          }
+          sendEmailWithVideo();
+        });
+
+      document
+        .getElementById("sosButton")
+        .addEventListener("click", function () {
+          let mediaRecorder;
+          let audioChunks = [];
+
+          navigator.mediaDevices
+            .getUserMedia({ audio: true })
+            .then((stream) => {
+              mediaRecorder = new MediaRecorder(stream);
 
               mediaRecorder.ondataavailable = function (event) {
-                chunks.push(event.data);
+                audioChunks.push(event.data);
               };
 
               mediaRecorder.onstop = function () {
-                let blob = new Blob(chunks, { type: "video/webm" });
-                let videoUrl = URL.createObjectURL(blob);
-
-                // Here, you'd send the blob via email
-                sendEmailWithVideo(blob);
+                let audioBlob = new Blob(audioChunks, { type: "audio/wav" });
+                sendAudioEmail(audioBlob);
               };
 
+              // Start recording for 10 seconds
               mediaRecorder.start();
+              setTimeout(() => {
+                mediaRecorder.stop(); // Stop recording after 10 seconds
+                stream.getTracks().forEach((track) => track.stop()); // Stop all camera tracks
+              }, 10000); // Record for 10 seconds
+            });
 
-              // Stop recording after a certain time or based on a condition
-              setTimeout(() => mediaRecorder.stop(), 10000); // Records for 10 seconds
+          function sendAudioEmail(audioBlob) {
+            // Use FormData to send the audioBlob to your server
+            let formData = new FormData();
+            formData.append("audio", audioBlob, "recording.wav");
 
-              function sendEmailWithVideo(blob) {
-              let formData = new FormData();
-              formData.append("video", blob, "sos-video.webm");
+            fetch("/api/send-audio", {
+              method: "POST",
+              body: formData,
+            }).then((response) => {
+              if (response.ok) {
+                console.log("Audio sent successfully!");
+              } else {
+                console.error("Error sending audio.");
+              }
+            });
+          }
 
-              fetch("/send-video", {
-                method: "POST",
-                body: formData,
-              })
-                .then((response) => response.text())
-                .then((data) => console.log(data))
-                .catch((error) => console.error("Error:", error));
-            }
-            sendEmailWithVideo();
-            })
+          sendAudioEmail();
+        });
+
+        document.getElementById('sosButton').addEventListener('click', function () {
+            const audio = document.getElementById('alarm');
+            
+            // Play the audio
+            audio.play();
+
+            // Stop the audio after 10 seconds
+            setTimeout(function () {
+                audio.pause();
+                audio.currentTime = 0; // Reset to the beginning of the audio
+            }, 15000); // 10000 milliseconds = 10 seconds
+        });
     </script>
   </body>
 </html>
