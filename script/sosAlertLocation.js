@@ -12,7 +12,7 @@ function triggerSOS() {
         const timestamp = new Date(position.timestamp);
 
         // Send location to backend with multiple recipients
-        fetch("http://localhost:5000/api/send-sos", {
+        fetch("/api/send-sos", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -60,6 +60,9 @@ function triggerSOS() {
   // start audio recording
 
   recordAudio()
+
+  //audio
+  audio()
 }
 
 // Function to handle video recording and sending via email
@@ -152,6 +155,19 @@ function recordAudio() {
       });
     }
   }
+
+  function audio() {
+    const audio = document.getElementById('alarm');
+    
+    // Play the audio
+    audio.play();
+
+    // Stop the audio after 10 seconds
+    setTimeout(function () {
+        audio.pause();
+        audio.currentTime = 0; // Reset to the beginning of the audio
+    }, 15000); // 10000 milliseconds = 10 seconds
+};
 
 // Detect spacebar presses and trigger SOS after 3 presses
 document.addEventListener("keydown", function (event) {
