@@ -341,19 +341,6 @@
 
           sendAudioEmail();
         });
-
-        document.getElementById('sosButton').addEventListener('click', function () {
-            const audio = document.getElementById('alarm');
-            
-            // Play the audio
-            audio.play();
-
-            // Stop the audio after 10 seconds
-            setTimeout(function () {
-                audio.pause();
-                audio.currentTime = 0; // Reset to the beginning of the audio
-            }, 15000); // 10000 milliseconds = 10 seconds
-        });
     </script>
   </body>
 </html>
