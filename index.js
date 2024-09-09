@@ -1,5 +1,6 @@
 const express = require("express");
 const path = require("path");
+const exphbs  = require('express-handlebars');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const nodemailer = require('nodemailer');
@@ -18,6 +19,9 @@ app.use(require(path.join(__dirname, "router/router.js")))
 
 app.use(cors());
 app.use(bodyParser.json());
+
+app.engine('handlebars', exphbs.engine());
+app.set('view engine', 'handlebars');
 
 const transporter = nodemailer.createTransport({
     service: 'gmail',

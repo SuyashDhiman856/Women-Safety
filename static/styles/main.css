@@ -1,0 +1,11 @@
+#header{
+    background-color: red !important;
+    color: white;
+    position: fixed !important;
+}
+
+#footer{
+    width: 100%;
+    background-color: lightgray;
+    bottom: 0%;
+}
