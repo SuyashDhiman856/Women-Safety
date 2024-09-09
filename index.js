@@ -12,7 +12,7 @@ const accountSid = 'AC2b06d0c9bd650fb1f4bbc2f7e45bd8d7';
 const authToken = '5462c019e0a9526b16bfb81190679cb5';
 const twilioClient = twilio(accountSid, authToken);
 
-app.use('/', express.static(path.join(__dirname, "views")));
+app.use('/', express.static(path.join(__dirname, "public")));
 app.use(express.static(path.join(__dirname, "script")));
 app.use(require(path.join(__dirname, "router/router.js")))
 
