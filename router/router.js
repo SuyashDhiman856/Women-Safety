@@ -9,7 +9,7 @@ router.get("/", (req, res) => {
 
 router.get("/script/index.js", (req, res) => {
     res.sendFile(path.join(__dirname, "../index.js"));
-}
+})
 
 router.get("/images/Womens-Safety-in-India", (req, res) => {
     res.sendFile(path.join(__dirname, `../Images/Womens-Safety-in-India.png`));

@@ -9,7 +9,7 @@ const app = express();
 const upload = multer();
 
 const accountSid = 'AC2b06d0c9bd650fb1f4bbc2f7e45bd8d7';
-const authToken = '5462c019e0a9526b16bfb81190679cb5';
+const authToken = '378ee299de03ca0d67cdc60ced102b48';
 const twilioClient = twilio(accountSid, authToken);
 
 app.use('/', express.static(path.join(__dirname, "public")));
